@@ -113,6 +113,10 @@ func getChanges() (string, error) {
 		return "", fmt.Errorf("No commits detected. HINT: Did you run 'git add .'?")
 	}
 
+	if strings.Contains(string(out), "nothing to commit, working tree clean") {
+		return "", fmt.Errorf("No changes detected. Your working tree is clean.")
+	}
+
 	return fmt.Sprintf(`Write a commit message following the Conventional Commits standard and use Markdown formatting if needed. Please do not include the character count in the message, any author information or code snippet. The commit message should describe the changes made by this commit. these are changes:  %s`, out), nil
 }
 
