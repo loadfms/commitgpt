@@ -44,7 +44,17 @@ type OpenAIReponse struct {
 
 func main() {
 	endpoint := "https://api.openai.com/v1/chat/completions"
-	apiKey := getApiKey()
+	apiKey, err := getApiKey()
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	changes, err := getChanges()
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 
 	request := OpenAIRequest{
 		Model:       "gpt-3.5-turbo",
@@ -54,7 +64,7 @@ func main() {
 
 	message := OpenAIRequestMessages{
 		Role:    "user",
-		Content: getChanges(),
+		Content: changes,
 	}
 
 	request.Messages = append(request.Messages, message)
@@ -92,38 +102,38 @@ func main() {
 	fmt.Println(res.Choices[0].Message.Content)
 }
 
-func getChanges() string {
+func getChanges() (string, error) {
 	cmd := exec.Command("git", "status", "-v")
 	out, err := cmd.Output()
 	if err != nil {
-		panic("Error executing git status")
+		return "", fmt.Errorf("Error executing git status")
 	}
 
 	if strings.Contains(string(out), "no changes added to commit") {
-		panic("No commits detected")
+		return "", fmt.Errorf("No commits detected. HINT: Did you run 'git add .'?")
 	}
 
-	return fmt.Sprintf(`Write a commit message following the Conventional Commits standard and use Markdown formatting if needed. Please do not include the character count in the message, any author information or code snippet. The commit message should describe the changes made by this commit. these are changes:  %s`, out)
+	return fmt.Sprintf(`Write a commit message following the Conventional Commits standard and use Markdown formatting if needed. Please do not include the character count in the message, any author information or code snippet. The commit message should describe the changes made by this commit. these are changes:  %s`, out), nil
 }
 
-func getApiKey() string {
+func getApiKey() (string, error) {
 	filename := "/.config/openai/config"
 
 	currentUser, err := user.Current()
 	if err != nil {
-		panic("Error getting current user")
+		return "", fmt.Errorf("Error getting current user")
 	}
 
 	file, err := os.Open(currentUser.HomeDir + filename)
 	if err != nil {
-		panic("Error opening file")
+		return "", fmt.Errorf("Error opening file in $HOME/.config/openai/config")
 	}
 	defer file.Close()
 
 	data, err := ioutil.ReadAll(file)
 	if err != nil {
-		panic("Error reading file")
+		return "", fmt.Errorf("Error reading file")
 	}
 
-	return strings.TrimSuffix(string(data), "\n")
+	return strings.TrimSuffix(string(data), "\n"), nil
 }
