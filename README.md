@@ -31,11 +31,11 @@ alias cgpt = git commit -m "$(commitgpt)"
 
 ### Sample of Usage
 ```bash
-git add .
+$ git add .
 
-commitgpt
+$ cgpt
 
-git push
+$ git push
 ```
 
 ## Uninstall
