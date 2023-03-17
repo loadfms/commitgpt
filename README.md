@@ -19,21 +19,21 @@ Create a `config` file under `~/.config/openai/` with your OpenAi key.
 To generate a commit message, navigate to the root directory of your git repository and run the following command:
 
 ```bash
-git commit -m "$(git status -v | tr "\n" "  " | xargs -I {} go run . "{}")"
+git commit -m "$(git status -v | tr "\n" "  " | xargs -I {} commitgpt "{}")"
 ```
 
 Commit GPT will analyze the changes in the git diff and generate a commit message based on the conventional commits standard.
 
 > TIP: create a alias with this command on yout .zsrc like this
 ```
-alias commitgpt='git commit -m "$(git status -v | tr "\n" "  " | xargs -I {} go run . "{}")"'
+alias cgpt='git commit -m "$(git status -v | tr "\n" "  " | xargs -I {} commitgpt "{}")"'
 ```
 
 ### Sample of Usage
 ```bash
 git add .
 
-commitgpt
+cgpt
 
 git push
 ```
