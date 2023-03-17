@@ -88,7 +88,6 @@ func main() {
 		return
 	}
 
-	fmt.Println("Commit created!")
 	fmt.Println(res.Choices[0].Message.Content)
 }
 
