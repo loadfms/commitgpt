@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"os/exec"
 	"os/user"
 	"strings"
 )
@@ -92,14 +93,13 @@ func main() {
 }
 
 func getChanges() string {
-	if len(os.Args) < 2 {
-		fmt.Println("Please provide a parameter.")
-		panic(0)
+	cmd := exec.Command("git", "status", "-v")
+	out, err := cmd.Output()
+	if err != nil {
+		panic("Error executing git status")
 	}
 
-	param := os.Args[1]
-
-	return fmt.Sprintf(`Write a commit message following the Conventional Commits standard and use Markdown formatting if needed. Please do not include the character count in the message. The commit message should describe the changes made by this commit. these are changes:  %v`, param)
+	return fmt.Sprintf(`Write a commit message following the Conventional Commits standard and use Markdown formatting if needed. Please do not include the character count in the message, any author information or code snippet. The commit message should describe the changes made by this commit. these are changes:  %s`, out)
 }
 
 func getApiKey() string {
@@ -107,21 +107,18 @@ func getApiKey() string {
 
 	currentUser, err := user.Current()
 	if err != nil {
-		fmt.Println("Error getting current user:", err)
-		panic(0)
+		panic("Error getting current user")
 	}
 
 	file, err := os.Open(currentUser.HomeDir + filename)
 	if err != nil {
-		fmt.Println("Error opening file:", err)
-		panic(0)
+		panic("Error opening file")
 	}
 	defer file.Close()
 
 	data, err := ioutil.ReadAll(file)
 	if err != nil {
-		fmt.Println("Error reading file:", err)
-		panic(0)
+		panic("Error reading file")
 	}
 
 	return strings.TrimSuffix(string(data), "\n")

@@ -7,7 +7,7 @@ Commit GPT is a command-line tool that generates a commit message based on the c
 To install Commit GPT, you need to have Go installed on your system. Then, you can run the following command:
 
 ```bash
-go install github.com/loadfms/commitgpt@latest
+go install github.com/loadfms/commitgpt@v1.0.0
 ```
 
 Create a `config` file under `~/.config/openai/` with your OpenAi key.
@@ -19,23 +19,29 @@ Create a `config` file under `~/.config/openai/` with your OpenAi key.
 To generate a commit message, navigate to the root directory of your git repository and run the following command:
 
 ```bash
-git commit -m "$(git status -v | tr "\n" "  " | xargs -I {} commitgpt "{}")"
+$ git commit -m "$(commitgpt)"
 ```
 
 Commit GPT will analyze the changes in the git diff and generate a commit message based on the conventional commits standard.
 
-> TIP: create a alias with this command on yout .zsrc like this
-```
-alias cgpt='git commit -m "$(git status -v | tr "\n" "  " | xargs -I {} commitgpt "{}")"'
+> PRO TIP: create alias in your .zsrc with command
+```bash
+alias cgpt = git commit -m "$(commitgpt)"
 ```
 
 ### Sample of Usage
 ```bash
 git add .
 
-cgpt
+commitgpt
 
 git push
+```
+
+## Uninstall
+To uninstall just remove the bin file from your $GOPATH/bin
+```bash
+rm $GOPATH/bin/commitgpt
 ```
 
 ## Conventional Commits
@@ -44,7 +50,7 @@ The conventional commits standard is a lightweight convention on top of commit m
 
 A conventional commit message consists of a type, a scope, and a subject, followed by a body and a footer (optional). Here's an example of a conventional commit message:
 
-```javascript
+```
 
 feat(parser): add support for JSON input
 
