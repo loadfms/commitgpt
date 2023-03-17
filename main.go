@@ -99,10 +99,13 @@ func getChanges() string {
 		panic("Error executing git status")
 	}
 
+<<<<<<< HEAD
 	if strings.Contains(string(out), "no changes added to commit") {
 		panic("No commits detected")
 	}
 
+=======
+>>>>>>> 9b6e63b22f6588999ef1864e85c84885ccdad732
 	return fmt.Sprintf(`Write a commit message following the Conventional Commits standard and use Markdown formatting if needed. Please do not include the character count in the message, any author information or code snippet. The commit message should describe the changes made by this commit. these are changes:  %s`, out)
 }
 
