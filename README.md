@@ -26,7 +26,7 @@ Commit GPT will analyze the changes in the git diff and generate a commit messag
 
 > PRO TIP: create alias in your .zsrc with command
 ```bash
-alias cgpt = git commit -m "$(commitgpt)"
+alias cgpt='git commit -m "$(commitgpt)"'
 ```
 
 ### Sample of Usage
