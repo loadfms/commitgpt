@@ -1,6 +1,6 @@
-# Commit GPT
+# commitgpt
 
-Commit GPT is a command-line tool that generates a commit message based on the changes in the git diff, following the conventional commits standard.
+CommitGPT is a command-line tool that generates a commit message based on the changes in the git diff, following the conventional commits standard.
 
 ## Installation
 
