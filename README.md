@@ -51,7 +51,6 @@ The conventional commits standard is a lightweight convention on top of commit m
 A conventional commit message consists of a type, a scope, and a subject, followed by a body and a footer (optional). Here's an example of a conventional commit message:
 
 ```
-
 feat(parser): add support for JSON input
 
 Add support for parsing JSON input in the parser module.
