@@ -57,8 +57,8 @@ func main() {
 	}
 
 	request := OpenAIRequest{
-		Model:       "gpt-3.5-turbo",
-		Temperature: 0.7,
+		Model:       "gpt-3.5-turbo-1106",
+		Temperature: 0.5,
 		Messages:    make([]OpenAIRequestMessages, 0),
 	}
 
