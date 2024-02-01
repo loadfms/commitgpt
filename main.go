@@ -1,15 +1,18 @@
 package main
 
 import (
+	"bufio"
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"os"
 	"os/exec"
 	"os/user"
 	"strings"
+
+	"github.com/cli/browser"
 )
 
 type OpenAIRequest struct {
@@ -43,6 +46,14 @@ type OpenAIReponse struct {
 }
 
 func main() {
+	err := handleArguments()
+	if err != nil {
+		if err.Error() != "done" {
+			fmt.Println(err)
+		}
+		return
+	}
+
 	endpoint := "https://api.openai.com/v1/chat/completions"
 	apiKey, err := getApiKey()
 	if err != nil {
@@ -102,6 +113,83 @@ func main() {
 	fmt.Println(res.Choices[0].Message.Content)
 }
 
+func handleArguments() error {
+	args := os.Args[1:]
+	if len(args) > 0 {
+		switch args[0] {
+		case "help":
+			return help()
+		case "auth":
+			return auth()
+		case "config":
+		default:
+			return fmt.Errorf("Invalid argument '%s'", args[0])
+		}
+	}
+	return nil
+}
+
+func help() error {
+	// Colors
+	Reset := "\033[0m"
+	White := "\033[97m"
+
+	fmt.Println(White + "CommitGPT is a command-line tool that generates a commit message based on the changes in the git diff, following the conventional commits standard." + Reset)
+	fmt.Println("")
+	fmt.Println("Available commands for CommitGPT:")
+	fmt.Println("")
+	fmt.Println(White + "   auth:" + Reset)
+	fmt.Println("     Configure your OpenAI credentials.")
+	fmt.Println("     Redirects you to OpenAI Website, gets the API Key and automatically stores it.")
+	fmt.Println("")
+	return fmt.Errorf("done")
+}
+
+func auth() error {
+	url := "https://platform.openai.com/api-keys"
+	err := browser.OpenURL(url)
+	if err != nil {
+		return err
+	}
+	fmt.Println("Your browser has been opened to visit: ")
+	fmt.Printf("  %s\n\n", url)
+
+	fmt.Print("Paste your API Key here: ")
+	reader := bufio.NewReader(os.Stdin)
+	// ReadString will block until the delimiter is entered
+	input, err := reader.ReadString('\n')
+	if err != nil {
+		fmt.Println("An error occured while reading input. Please try again", err)
+		return err
+	}
+
+	path := "/.config/openai/"
+	filename := "config"
+
+	currentUser, err := user.Current()
+	if err != nil {
+		return fmt.Errorf("Error getting current user")
+	}
+
+	// Create directory and config file in case it doesn't exists
+	// or open the config file in case it already exists and update its value
+	os.Mkdir(currentUser.HomeDir+path, os.ModePerm)
+	file, err := os.Create(currentUser.HomeDir + path + filename)
+	if err != nil {
+		file, err = os.Open(currentUser.HomeDir + path + filename)
+		if err != nil {
+			return fmt.Errorf("Error opening file in $HOME/.config/openai/config")
+		}
+	}
+	defer file.Close()
+	_, err = file.Write([]byte(input))
+	if err != nil {
+		return fmt.Errorf("Error writing OpenAI's config file")
+	}
+
+	return fmt.Errorf("done")
+}
+
 func getChanges() (string, error) {
 	cmd := exec.Command("git", "status", "-v")
 	out, err := cmd.Output()
@@ -134,7 +222,8 @@ func getApiKey() (string, error) {
 	}
 	defer file.Close()
 
-	data, err := ioutil.ReadAll(file)
+	// new comment testing commit
+	data, err := io.ReadAll(file)
 	if err != nil {
 		return "", fmt.Errorf("Error reading file")
 	}
