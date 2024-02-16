@@ -4,6 +4,9 @@ go 1.21
 
 toolchain go1.21.6
 
-require github.com/cli/browser v1.3.0
+require (
+	github.com/cli/browser v1.3.0
+	github.com/pelletier/go-toml/v2 v2.1.1
+)
 
 require golang.org/x/sys v0.13.0 // indirect
