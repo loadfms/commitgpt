@@ -10,7 +10,10 @@ To install Commit GPT, you need to have Go installed on your system. Then, you c
 go install github.com/loadfms/commitgpt@v1.1.0
 ```
 
-Create a `config` file under `~/.config/openai/` with your OpenAi key or use `auth` command to automate it.
+To configure your access and preferences, run:
+```bash
+commitgpt auth
+```
 
 > If you dont have a key already, visit [Api Keys](https://platform.openai.com/account/api-keys)
 
