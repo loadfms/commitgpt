@@ -7,7 +7,7 @@ CommitGPT is a command-line tool that generates a commit message based on the ch
 To install Commit GPT, you need to have Go installed on your system. Then, you can run the following command:
 
 ```bash
-go install github.com/loadfms/commitgpt@v1.0.8
+go install github.com/loadfms/commitgpt@v1.1.0
 ```
 
 Create a `config` file under `~/.config/openai/` with your OpenAi key or use `auth` command to automate it.

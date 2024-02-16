@@ -25,6 +25,7 @@ type OpenAiService struct {
 
 func NewOpenAiService(cfg *ConfigService, aiModel AiModel, temperature float64) *OpenAiService {
 	return &OpenAiService{
+		cfg: cfg,
 		OpenAiRequest: models.OpenAIRequest{
 			Model:       string(aiModel),
 			Temperature: temperature,
