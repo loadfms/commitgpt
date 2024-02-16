@@ -90,5 +90,5 @@ func (c *CommandsService) Auth() error {
 		return err
 	}
 
-	return nil
+	return fmt.Errorf("done")
 }
