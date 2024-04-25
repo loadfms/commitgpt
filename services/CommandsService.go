@@ -75,6 +75,10 @@ func (c *CommandsService) Auth() (string, error) {
 
 	if len(inputPrompt) == 0 {
 		inputPrompt = models.DEFAULT_PROMPT
+	} else {
+		// Add the default prompt to the custom prompt
+		// This is to ensure that the commit message is generated based on the changes in the git diff
+		inputPrompt = fmt.Sprintf("%s, %s", inputPrompt, models.DEFAULT_PROMPT)
 	}
 
 	currentUser, err := user.Current()
