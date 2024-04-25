@@ -7,10 +7,11 @@ CommitGPT is a command-line tool that generates a commit message based on the ch
 To install Commit GPT, you need to have Go installed on your system. Then, you can run the following command:
 
 ```bash
-go install github.com/loadfms/commitgpt@v1.1.1
+go install github.com/loadfms/commitgpt@v1.2.0
 ```
 
 To configure your access and preferences, run:
+
 ```bash
 commitgpt auth
 ```
@@ -28,11 +29,13 @@ $ git commit -m "$(commitgpt)"
 Commit GPT will analyze the changes in the git diff and generate a commit message based on the conventional commits standard.
 
 > PRO TIP: create alias on your .zshrc with command
+
 ```bash
 alias cgpt='git commit -m "$(commitgpt)"'
 ```
 
 ### Sample of Usage
+
 ```bash
 $ git add .
 
@@ -42,7 +45,9 @@ $ git push
 ```
 
 ## Uninstall
+
 To uninstall just remove the bin file from your $GOPATH/bin
+
 ```bash
 rm $GOPATH/bin/commitgpt
 ```

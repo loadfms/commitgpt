@@ -3,6 +3,7 @@ package services
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"github.com/loadfms/commitgpt/models"
@@ -66,6 +67,14 @@ func (s *OpenAiService) GetResponse(prompt string) (string, error) {
 	err = json.NewDecoder(resp.Body).Decode(&res)
 	if err != nil {
 		return "", err
+	}
+
+	if resp.StatusCode != 200 {
+		return "", fmt.Errorf("Could not interact with OpenAI: %s", resp.Status)
+	}
+
+	if res.Choices == nil || len(res.Choices) == 0 {
+		return "", fmt.Errorf("No response from OpenAI.\nPlease, check your API KEY and try again.")
 	}
 
 	return res.Choices[0].Message.Content, nil

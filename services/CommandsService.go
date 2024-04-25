@@ -8,11 +8,11 @@ import (
 	"strings"
 
 	"github.com/cli/browser"
+
 	"github.com/loadfms/commitgpt/models"
 )
 
-type CommandsService struct {
-}
+type CommandsService struct{}
 
 func NewCommandsService() *CommandsService {
 	return &CommandsService{}
@@ -86,9 +86,6 @@ func (c *CommandsService) Auth() error {
 	cfgContent.Prompt.Custom = inputPrompt
 
 	SaveConfigFile(filePath, cfgContent)
-	if err != nil {
-		return err
-	}
 
 	return fmt.Errorf("done")
 }
