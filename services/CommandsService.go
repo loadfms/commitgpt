@@ -4,21 +4,31 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"os/exec"
 	"os/user"
+	"regexp"
 	"strings"
 
 	"github.com/cli/browser"
+
 	"github.com/loadfms/commitgpt/models"
 )
 
+// We might want to pass args to the commands service
+// if things get more complex
 type CommandsService struct {
+	prompt    *PromptService
+	openAiSvc *OpenAiService
 }
 
-func NewCommandsService() *CommandsService {
-	return &CommandsService{}
+func NewCommandsService(prompt *PromptService, openAiSvc *OpenAiService) *CommandsService {
+	return &CommandsService{
+		prompt:    prompt,
+		openAiSvc: openAiSvc,
+	}
 }
 
-func (c *CommandsService) Help() error {
+func (c *CommandsService) Help() (string, error) {
 	// Colors
 	Reset := "\033[0m"
 	White := "\033[97m"
@@ -27,18 +37,18 @@ func (c *CommandsService) Help() error {
 	fmt.Println("")
 	fmt.Println("Available commands for CommitGPT:")
 	fmt.Println("")
-	fmt.Println(White + "   auth:" + Reset)
+	fmt.Println(White + "   auth, --auth, -a:" + Reset)
 	fmt.Println("     Configure your OpenAI credentials.")
 	fmt.Println("     Redirects you to OpenAI Website, gets the API Key and automatically stores it.")
 	fmt.Println("")
-	return fmt.Errorf("done")
+	return "done", nil
 }
 
-func (c *CommandsService) Auth() error {
+func (c *CommandsService) Auth() (string, error) {
 	url := "https://platform.openai.com/api-keys"
 	err := browser.OpenURL(url)
 	if err != nil {
-		return err
+		return "", err
 	}
 	fmt.Println("Your browser has been opened to visit: ")
 	fmt.Printf("  %s\n\n", url)
@@ -48,7 +58,7 @@ func (c *CommandsService) Auth() error {
 	inputApiKey, err := reader.ReadString('\n')
 	if err != nil {
 		fmt.Println("An error occurred while reading input. Please try again", err)
-		return err
+		return "", err
 	}
 
 	inputApiKey = strings.TrimSpace(inputApiKey)
@@ -58,18 +68,22 @@ func (c *CommandsService) Auth() error {
 	inputPrompt, err := reader.ReadString('\n')
 	if err != nil {
 		fmt.Println("An error occurred while reading input. Please try again", err)
-		return err
+		return "", err
 	}
 
 	inputPrompt = strings.TrimSpace(inputPrompt)
 
 	if len(inputPrompt) == 0 {
 		inputPrompt = models.DEFAULT_PROMPT
+	} else {
+		// Add the default prompt to the custom prompt
+		// This is to ensure that the commit message is generated based on the changes in the git diff
+		inputPrompt = fmt.Sprintf("%s, %s", inputPrompt, models.DEFAULT_PROMPT)
 	}
 
 	currentUser, err := user.Current()
 	if err != nil {
-		return fmt.Errorf("Error getting current user")
+		return "", fmt.Errorf("Error getting current user")
 	}
 
 	// Create directory if it doesn't exist
@@ -86,9 +100,61 @@ func (c *CommandsService) Auth() error {
 	cfgContent.Prompt.Custom = inputPrompt
 
 	SaveConfigFile(filePath, cfgContent)
+
+	return "done", nil
+}
+
+func (c *CommandsService) Interactive(args []string) (string, error) {
+	prompt, err := c.prompt.InteractivePrompt(args)
 	if err != nil {
-		return err
+		return "", err
 	}
 
-	return fmt.Errorf("done")
+	// Get the response from OpenAI
+	result, err := c.openAiSvc.GetResponse(prompt)
+	if err != nil {
+		return "", err
+	}
+
+	var confirm string
+	fmt.Printf("Here is the command to execute: \n\n%s\n\nDo you want to apply it? [y/n]: ", result)
+	_, err = fmt.Scan(&confirm)
+	if err != nil {
+		return "", err
+	}
+
+	// If the user confirms, execute the command
+	if strings.ToLower(confirm) != "y" {
+		return "", fmt.Errorf("Command execution aborted. '%s'", confirm)
+	}
+
+	output, err := executeCommand(result)
+	if err != nil {
+		return "", err
+	}
+
+	return string(output), nil
+}
+
+func executeCommand(cmd string) (string, error) {
+	// Split the result into commands
+	commands := strings.Split(cmd, " && ")
+
+	// Execute the commands
+	var err error
+	var output []byte
+	for _, command := range commands {
+		fmt.Println(command)
+		output, err = exec.Command("bash", "-c", command).Output()
+		if err != nil {
+			return "", err
+		}
+	}
+	return string(output), nil
+}
+
+// function to use regex to get string inside double quotes
+func getCommitMessage(s string) string {
+	re := regexp.MustCompile(`"([^"]+)"`)
+	return re.FindString(s)
 }
