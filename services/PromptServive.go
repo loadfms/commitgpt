@@ -59,9 +59,14 @@ func (s *PromptService) GetAllChanges() (string, error) {
 		}
 	}
 
-	if strings.Contains(string(status), "nothing to commit, working tree clean") {
-		return "", fmt.Errorf("No changes detected. Your working tree is clean.")
-	}
+	// Ignore this validation for now
+	// For example, if the user just want to execute something like this:
+	// `commitgpt -i "dude, I just want to reset the last pushed commit and rename it to "fix: something"`
+	// This will not work, because the user will not have any changes in the working tree
+
+	// if strings.Contains(string(status), "nothing to commit, working tree clean") {
+	// 	return "", fmt.Errorf("No changes detected. Your working tree is clean.")
+	// }
 
 	changes, err := exec.Command("git", "status", "-v").Output()
 	if err != nil {

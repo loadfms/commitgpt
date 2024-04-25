@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/exec"
 	"os/user"
+	"regexp"
 	"strings"
 
 	"github.com/cli/browser"
@@ -111,13 +112,26 @@ func (c *CommandsService) Interactive(args []string) (string, error) {
 		return "", err
 	}
 
-	// Execute result as a command
-	// split result into command and arguments
-	cmd := strings.Split(result, " ")
-	output, err := exec.Command(cmd[0], cmd[1:]...).Output()
-	if err != nil {
-		return "", err
+	fmt.Println(result)
+
+	var output []byte
+
+	// Split the result into commands
+	commands := strings.Split(result, " && ")
+	// Execute the commands
+	for _, command := range commands {
+		fmt.Println(command)
+		output, err = exec.Command("bash", "-c", command).Output()
+		if err != nil {
+			return "", err
+		}
 	}
 
 	return string(output), nil
+}
+
+// function to use regex to get string inside double quotes
+func getCommitMessage(s string) string {
+	re := regexp.MustCompile(`"([^"]+)"`)
+	return re.FindString(s)
 }
