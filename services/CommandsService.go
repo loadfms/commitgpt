@@ -112,13 +112,33 @@ func (c *CommandsService) Interactive(args []string) (string, error) {
 		return "", err
 	}
 
-	fmt.Println(result)
+	var confirm string
+	fmt.Printf("Here is the command to execute: \n\n%s\n\nDo you want to apply it? [y/n]: ", result)
+	_, err = fmt.Scan(&confirm)
+	if err != nil {
+		return "", err
+	}
 
-	var output []byte
+	// If the user confirms, execute the command
+	if strings.ToLower(confirm) != "y" {
+		return "", fmt.Errorf("Command execution aborted. '%s'", confirm)
+	}
 
+	output, err := executeCommand(result)
+	if err != nil {
+		return "", err
+	}
+
+	return string(output), nil
+}
+
+func executeCommand(cmd string) (string, error) {
 	// Split the result into commands
-	commands := strings.Split(result, " && ")
+	commands := strings.Split(cmd, " && ")
+
 	// Execute the commands
+	var err error
+	var output []byte
 	for _, command := range commands {
 		fmt.Println(command)
 		output, err = exec.Command("bash", "-c", command).Output()
@@ -126,7 +146,6 @@ func (c *CommandsService) Interactive(args []string) (string, error) {
 			return "", err
 		}
 	}
-
 	return string(output), nil
 }
 
