@@ -44,6 +44,18 @@ $ cgpt
 $ git push
 ```
 
+### Interactive Mode
+
+You can also run Commit GPT in interactive mode by using the -i flag. In this mode, you just need to ask to GPT do something, and it will do it for you.
+
+```bash
+$ commitgpt -i "Commit this stuff and create a new tag v1.2.0"
+```
+
+Boom! Commit GPT will create a commit message and a tag for you.
+_Note: The interactive mode is still in development and may not work as expected in some cases._
+_Also, take care with this, because it will really execute the command you ask for._
+
 ## Uninstall
 
 To uninstall just remove the bin file from your $GOPATH/bin
