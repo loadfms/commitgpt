@@ -32,19 +32,22 @@ func (c *CommandsService) Help() (string, error) {
 	// Colors
 	Reset := "\033[0m"
 	White := "\033[97m"
+	Green := "\033[32m"
 
 	fmt.Println(White + "CommitGPT is a command-line tool that generates a commit message based on the changes in the git diff, following the conventional commits standard." + Reset)
 	fmt.Println("")
 	fmt.Println("Available commands for CommitGPT:")
 	fmt.Println("")
-	fmt.Println(White + "   auth, --auth, -a:" + Reset)
+	fmt.Println(Green + "   auth, --auth, -a:" + Reset)
 	fmt.Println("     Configure your OpenAI credentials.")
 	fmt.Println("     Redirects you to OpenAI Website, gets the API Key and automatically stores it.")
 	fmt.Println("")
-	fmt.Println(White + "   interactive, --interactive, -i:" + Reset)
+	fmt.Println(Green + "   interactive, --interactive, -i:" + Reset)
 	fmt.Println("     Generates a commit message based on the changes in the git diff.")
 	fmt.Println("     The user can interact with the generated message and decide whether to apply it.")
 	fmt.Println("     After typing the command, the user will be prompted to either accept the command [y], reject it [n] or to retry [r].")
+	fmt.Println("     Example:")
+	fmt.Println(White + "       commitgpt -i [Prompt]" + Reset)
 	fmt.Println("")
 	return "done", nil
 }
