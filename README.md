@@ -78,7 +78,7 @@ _Also, take care with this, because it will really execute the command you ask f
 
 ## Uninstall :fire:
 
-To uninstall just remove the bin file from your $GOPATH/bin
+To uninstall just remove the bin file from your `$GOPATH/bin`
 
 ```bash
 rm $GOPATH/bin/commitgpt
