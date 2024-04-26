@@ -94,5 +94,5 @@ func (s *PromptService) InteractivePrompt(args []string) (string, error) {
 		return "", err
 	}
 
-	return fmt.Sprintf(`%s %s %s`, models.INTERACTIVE_PROMPT, changes, prompt), nil
+	return fmt.Sprintf(`%s %s Prompt: ChatGPT, %s`, models.INTERACTIVE_PROMPT, changes, prompt), nil
 }

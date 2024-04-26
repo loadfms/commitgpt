@@ -1,19 +1,19 @@
-# commitgpt
+# CommitGPT :robot:
 
 CommitGPT is a command-line tool that generates a commit message based on the changes in the git diff, following the conventional commits standard.
 
-## Installation
+## Installation :rocket:
 
 To install Commit GPT, you need to have Go installed on your system. Then, you can run the following command:
 
 ```bash
-go install github.com/loadfms/commitgpt@v1.2.0
+    go install github.com/loadfms/commitgpt@v1.2.0
 ```
 
 To configure your access and preferences, run:
 
 ```bash
-commitgpt auth
+    commitgpt auth
 ```
 
 > If you dont have a key already, visit [Api Keys](https://platform.openai.com/account/api-keys)
@@ -23,7 +23,7 @@ commitgpt auth
 To generate a commit message, navigate to the root directory of your git repository and run the following command:
 
 ```bash
-$ git commit -m "$(commitgpt)"
+    git commit -m "$(commitgpt)"
 ```
 
 Commit GPT will analyze the changes in the git diff and generate a commit message based on the conventional commits standard.
@@ -31,7 +31,7 @@ Commit GPT will analyze the changes in the git diff and generate a commit messag
 > PRO TIP: create alias on your .zshrc with command
 
 ```bash
-alias cgpt='git commit -m "$(commitgpt)"'
+    alias cgpt='git commit -m "$(commitgpt)"'
 ```
 
 ### Sample of Usage
@@ -42,6 +42,22 @@ $ git add .
 $ cgpt
 
 $ git push
+
+# OR 
+
+$ commitgpt -i "Commit this stuff and push my branch to origin"
+
+commitgpt:
+  Here is the commands to execute:
+
+  git add README.md
+  git add services/CommandsService.go
+  git add models/Constants.go
+  git add services/PromptServive.go
+  git commit -m ":robot: chore: upgrade interactive mode"
+  git push -u origin feat/upgrading-interactive-mode
+
+  Do you want to apply it? [y/n/r]:
 ```
 
 ### Interactive Mode

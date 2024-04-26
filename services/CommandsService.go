@@ -121,7 +121,7 @@ func (c *CommandsService) Interactive(args []string) (string, error) {
 		return "", err
 	}
 
-	// Replace the ' && ' to '\n' to print to the user
+	// Replace the ' && ' for '\n' to print to the user
 	Reset := "\033[0m"
 	Green := "\033[32m"
 	commands := Green + strings.ReplaceAll(result, " && ", "\n") + Reset
