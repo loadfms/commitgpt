@@ -130,7 +130,7 @@ func (c *CommandsService) Interactive(args []string) (string, error) {
 	commands := Green + strings.ReplaceAll(result, " && ", "\n") + Reset
 
 	var confirm string
-	fmt.Printf("Here is the commands to execute: \n\n%s\n\nDo you want to apply it? [y/n/r]: ", commands)
+	fmt.Printf("Here are the commands to execute: \n\n%s\n\nDo you want to apply it? [y/n/r]: ", commands)
 	_, err = fmt.Scan(&confirm)
 	if err != nil {
 		return "", err

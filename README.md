@@ -7,7 +7,7 @@ CommitGPT is a command-line tool that generates a commit message based on the ch
 To install Commit GPT, you need to have Go installed on your system. Then, you can run the following command:
 
 ```bash
-go install github.com/loadfms/commitgpt@v1.2.1
+go install github.com/loadfms/commitgpt@latest
 ```
 
 To configure your access and preferences, run:
@@ -52,7 +52,7 @@ $ git push
 $ commitgpt -i "Commit this stuff and push my branch to origin"
 
 commitgpt:
-  Here is the commands to execute:
+  Here are the commands to execute:
 
   git add README.md
   git add services/CommandsService.go
