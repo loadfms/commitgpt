@@ -41,6 +41,11 @@ func (c *CommandsService) Help() (string, error) {
 	fmt.Println("     Configure your OpenAI credentials.")
 	fmt.Println("     Redirects you to OpenAI Website, gets the API Key and automatically stores it.")
 	fmt.Println("")
+	fmt.Println(White + "   interactive, --interactive, -i:" + Reset)
+	fmt.Println("     Generates a commit message based on the changes in the git diff.")
+	fmt.Println("     The user can interact with the generated message and decide whether to apply it.")
+	fmt.Println("     After typing the command, the user will be prompted to either accept the command [y], reject it [n] or to retry [r].")
+	fmt.Println("")
 	return "done", nil
 }
 
@@ -116,16 +121,27 @@ func (c *CommandsService) Interactive(args []string) (string, error) {
 		return "", err
 	}
 
+	// Replace the ' && ' to '\n' to print to the user
+	Reset := "\033[0m"
+	Green := "\033[32m"
+	commands := Green + strings.ReplaceAll(result, " && ", "\n") + Reset
+
 	var confirm string
-	fmt.Printf("Here is the command to execute: \n\n%s\n\nDo you want to apply it? [y/n]: ", result)
+	fmt.Printf("Here is the commands to execute: \n\n%s\n\nDo you want to apply it? [y/n/r]: ", commands)
 	_, err = fmt.Scan(&confirm)
 	if err != nil {
 		return "", err
 	}
+	fmt.Println("")
 
 	// If the user confirms, execute the command
-	if strings.ToLower(confirm) != "y" {
+	if strings.ToLower(confirm) != "y" && strings.ToLower(confirm) != "r" {
 		return "", fmt.Errorf("Command execution aborted. '%s'", confirm)
+	}
+
+	// If the user wants to retry, call the interactive function again
+	if strings.ToLower(confirm) == "r" {
+		return c.Interactive(args)
 	}
 
 	output, err := executeCommand(result)
