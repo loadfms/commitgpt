@@ -76,10 +76,7 @@ func (s *PromptService) GetAllChanges() (string, error) {
 	return fmt.Sprintf(`%s %s`, s.cfg.CustomPrompt, string(changes)), nil
 }
 
-func (s *PromptService) InteractivePrompt(args []string) (string, error) {
-	// Get all the arguments passed to the command
-	arguments := args[1:]
-
+func (s *PromptService) InteractivePrompt(arguments []string) (string, error) {
 	// Check if the prompt is empty
 	if len(arguments) == 0 {
 		return "", fmt.Errorf("No prompt provided. Please provide a prompt.")

@@ -40,9 +40,12 @@ func handleArguments(promptSvc *services.PromptService, openAiSvc *services.Open
 		case "auth", "--auth", "-a":
 			return commandService.Auth()
 		case "interactive", "-i", "--interactive":
-			return commandService.Interactive(args)
+			return commandService.Interactive(args[1:]) // Remove the interactive flag
+		case "version", "--version":
+			return commandService.Version()
 		default:
-			return "", fmt.Errorf("Invalid argument '%s'", args[0])
+			// As a default behaviour on args, we will use interactive mode
+			return commandService.Interactive(args) // Pass the args to the interactive mode
 		}
 	}
 	// Default behaviour `git commit -m "$(commitgpt)"` is handled here:
