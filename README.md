@@ -27,7 +27,7 @@ git commit -m "$(commitgpt)"
 
 # OR
 
-commitgpt -i "Commit my changes"
+commitgpt "Commit my changes"
 ```
 
 Commit GPT will analyze the changes in the git diff and generate a commit message based on the conventional commits standard.
@@ -47,9 +47,9 @@ $ cgpt
 
 $ git push
 
-# OR 
+# OR
 
-$ commitgpt -i "Commit this stuff and push my branch to origin"
+$ commitgpt "Commit this stuff and push my branch to origin"
 
 commitgpt:
   Here are the commands to execute:
@@ -66,10 +66,15 @@ commitgpt:
 
 ### Interactive Mode :brain:
 
-You can also run CommitGPT in interactive mode by using the -i flag. In this mode, you just need to ask to GPT do something, and it will do it for you.
+You can also run CommitGPT in interactive mode by using the -i flag or, by default, just writing what you need to CommitGPT. In this mode, you just need to ask to GPT do something, and it will do it for you.
 
 ```bash
+commitgpt "Commit this stuff and create a new tag v1.2.0"
+
+# OR
+
 commitgpt -i "Commit this stuff and create a new tag v1.2.0"
+
 ```
 
 Boom! Commit GPT will create a commit message and a tag for you.
