@@ -33,10 +33,14 @@ func (c *CommandsService) Help() (string, error) {
 	Reset := "\033[0m"
 	White := "\033[97m"
 	Green := "\033[32m"
+	Grey := "\033[90m"
 
 	fmt.Println(White + "CommitGPT is a command-line tool that generates a commit message based on the changes in the git diff, following the conventional commits standard." + Reset)
 	fmt.Println("")
 	fmt.Println("Available commands for CommitGPT:")
+	fmt.Println("")
+	fmt.Println(Green + "   help, --help, -h:" + Reset)
+	fmt.Println("     Show the help message.")
 	fmt.Println("")
 	fmt.Println(Green + "   auth, --auth, -a:" + Reset)
 	fmt.Println("     Configure your OpenAI credentials.")
@@ -49,6 +53,10 @@ func (c *CommandsService) Help() (string, error) {
 	fmt.Println("     Example:")
 	fmt.Println(White + "       commitgpt -i [Prompt]" + Reset)
 	fmt.Println("")
+	fmt.Println(Green + "    version, --version:" + Reset)
+	fmt.Println("     Show the version of the CommitGPT tool.")
+	fmt.Println("")
+	fmt.Println(Grey + "For more information, please visit: github.com/loadfms/commitgpt." + Reset)
 	return "done", nil
 }
 
@@ -153,6 +161,19 @@ func (c *CommandsService) Interactive(args []string) (string, error) {
 	}
 
 	return string(output), nil
+}
+
+func (c *CommandsService) Version() (string, error) {
+	// Get version from file VERSION
+	buf, err := os.ReadFile(models.VERSION_FILE)
+	if err != nil {
+		return "", err
+	}
+
+	// Remove the newline character
+	version := strings.TrimSuffix(string(buf), "\n")
+
+	return fmt.Sprintf("%s version %s", models.NAME, version), nil
 }
 
 func executeCommand(cmd string) (string, error) {
