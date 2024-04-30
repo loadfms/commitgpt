@@ -181,16 +181,7 @@ func (c *CommandsService) Interactive(args []string) (string, error) {
 }
 
 func (c *CommandsService) Version() (string, error) {
-	// Get version from file VERSION
-	buf, err := os.ReadFile(models.VERSION_FILE)
-	if err != nil {
-		return "", err
-	}
-
-	// Remove the newline character
-	version := strings.TrimSuffix(string(buf), "\n")
-
-	return fmt.Sprintf("%s version %s", models.NAME, version), nil
+	return fmt.Sprintf("%s version %s", models.NAME, models.VERSION), nil
 }
 
 func executeCommand(cmd string) (string, error) {
