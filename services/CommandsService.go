@@ -33,6 +33,7 @@ func (c *CommandsService) Help() (string, error) {
 	Reset := "\033[0m"
 	White := "\033[97m"
 	Green := "\033[32m"
+	Blue := "\033[34m"
 	Grey := "\033[90m"
 
 	fmt.Println(White + "CommitGPT is a command-line tool that generates a commit message based on the changes in the git diff, following the conventional commits standard." + Reset)
@@ -45,6 +46,8 @@ func (c *CommandsService) Help() (string, error) {
 	fmt.Println(Green + "   auth, --auth, -a:" + Reset)
 	fmt.Println("     Configure your OpenAI credentials.")
 	fmt.Println("     Redirects you to OpenAI Website, gets the API Key and automatically stores it.")
+	fmt.Println("     You can also add a custom prompt to be used in the commit message.")
+	fmt.Println("     This is the first step to start using the CommitGPT tool.")
 	fmt.Println("")
 	fmt.Println(Green + "   interactive, --interactive, -i:" + Reset)
 	fmt.Println("     Generates a commit message based on the changes in the git diff.")
@@ -53,8 +56,22 @@ func (c *CommandsService) Help() (string, error) {
 	fmt.Println("     Example:")
 	fmt.Println(White + "       commitgpt -i [Prompt]" + Reset)
 	fmt.Println("")
-	fmt.Println(Green + "    version, --version:" + Reset)
+	fmt.Println(Green + "   version, --version:" + Reset)
 	fmt.Println("     Show the version of the CommitGPT tool.")
+	fmt.Println("")
+	fmt.Println(Blue + "   Usage: commitgpt [options]" + Reset)
+	fmt.Println("     The default behavior is to generate a commit message based on the changes in the git diff.")
+	fmt.Println("     If no options are passed, the tool will generate a commit message based on the changes in the git diff and return.")
+	fmt.Println("     The user can then copy the message and use it as a commit message.")
+	fmt.Println("     Or, as is recommended, you can run it like this: \033[32mgit commit -m \"$(commitgpt)\"\033[0m")
+	fmt.Println("     This will generate a commit message based on the changes in the git diff and automatically commit it.")
+	fmt.Println("")
+	fmt.Println("     Also, you can run it like this: \033[32mcommitgpt [Prompt]\033[0m")
+	fmt.Println("     This will generate a commit message based on the changes in the git diff and the prompt you passed.")
+	fmt.Println(White + "     Example:" + Reset)
+	fmt.Println(Green + "      $ commitgpt \"dude, commit this as work in progress stuff\"" + Reset)
+	fmt.Println("      CommitGPT will automatically search for the changes in the git diff and generate a commit message based on the prompt you passed.")
+	fmt.Println("      And you may choose to apply it \033[34m[y]\033[0m or not \033[34m[n]\033[0m, also having the option to retry \033[34m[r]\033[0m.")
 	fmt.Println("")
 	fmt.Println(Grey + "For more information, please visit: github.com/loadfms/commitgpt." + Reset)
 	return "done", nil
